@@ -20,22 +20,20 @@ class IncomeApp extends Component {
     let errors = {}
     let validityStatus = true
 
-    console.log(form["productId"])
-
     if(form){
-      if (form["productId"] === undefined ){
+      if (form["productId"] === '' || form["productId"] === undefined ){
         validityStatus = false
         errors["productId"] = "Debe seleccionar un producto."
       }
-      if (form["invoice"] === undefined ){
+      if (form["invoice"] === '' || form["invoice"] === undefined ){
         validityStatus = false
         errors["invoice"] = "Se debe ingrasar una factura."
       }
-      if (form["amount"] === undefined ){
+      if (form["amount"] === '' || form["amount"] === undefined ){
         validityStatus = false
         errors["amount"] = "Se debe ingresar una cantidad."
       }
-      if (form["unitPrice"] === undefined ){
+      if (form["unitPrice"] === '' || form["unitPrice"] === undefined ){
         validityStatus = false
         errors["unitPrice"] = "Debe ingresar un importe."
       }
@@ -99,15 +97,16 @@ class IncomeApp extends Component {
 
   modalInsertar=()=>{
     this.setState({modalInsertar: !this.state.modalInsertar});
+    this.setState({errorMessages: {}});
   }
 
   handleChange=async e=>{
-    await this.setState({
-      form:{
-        ...this.state.form,
-        [e.target.name]: e.target.value
-      }
-    });
+      await this.setState({
+        form:{
+          ...this.state.form,
+          [e.target.name]: e.target.value,
+          stockInitial: 0
+        }});
   }
 
   componentDidMount() {

@@ -22,15 +22,15 @@ class ExpensesApp extends Component {
     let validityStatus = true
 
     if(form){
-      if (form["productId"] === undefined ){
+      if (form["productId"] === '' || form["productId"] === undefined ){
         validityStatus = false
         errors["productId"] = "Debe seleccionar un producto."
       }
-      if (form["invoice"] === undefined ){
+      if (form["invoice"] === '' || form["invoice"] === undefined ){
         validityStatus = false
         errors["invoice"] = "Se debe ingrasar una factura."
       }
-      if (form["amount"] === undefined ){
+      if (form["amount"] === '' || form["amount"] === undefined ){
         validityStatus = false
         errors["amount"] = "Se debe ingresar una cantidad."
       } 
@@ -110,15 +110,16 @@ class ExpensesApp extends Component {
 
   modalInsertar=()=>{
     this.setState({modalInsertar: !this.state.modalInsertar});
+    this.setState({errorMessages: {}});
   }
 
   handleChange=async e=>{
     await this.setState({
       form:{
         ...this.state.form,
-        [e.target.name]: e.target.value
-      }
-    });
+        [e.target.name]: e.target.value,
+        stockInitial: 0
+      }});
   }
 
   componentDidMount() {

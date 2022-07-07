@@ -10,6 +10,8 @@ class ReportApp extends Component {
         chartDataBar: {},
         chartDataLineCounts: {},
         chartDataLinePrice: {},
+        productTotal: 0,
+        totAmountTotal: 0,
         totAmountExpenses: 0
     }
     
@@ -17,16 +19,22 @@ class ReportApp extends Component {
         axios.get(url + "/inventory/all").then(response=>{
             var productNameList=[];
             var productCountList=[];
+            var totAmountTotal=0;
             var totAmountExpenses=0;
 
             for (let key in response.data){
+                totAmountTotal=totAmountTotal + response.data[key].amountTotal;
+
                 if(response.data[key].amountExpenses > 0){
                     productNameList.push(response.data[key].productName);
                     productCountList.push(response.data[key].amountExpenses);
+                    console.log(response.data[key].amountTotal)
                     totAmountExpenses=totAmountExpenses + response.data[key].amountExpenses;
                 }
             }
 
+            this.setState({productTotal: response.data.length});            
+            this.setState({totAmountTotal: totAmountTotal});
             this.setState({totAmountExpenses: totAmountExpenses});
             this.setState({
                 chartDataBar: {
@@ -147,8 +155,9 @@ class ReportApp extends Component {
                     <h1 className='h3 mb-0'>INFORMACION DEL NEGOCIO</h1>
                 </div>
                 <div className='py-4 mb-2 bg light'>
-                    <i className="p-3 bg-primary text-white bi bi-bag-check" style={{width: '50%'}} ></i>
-                    <span className='w-25 p-3 mb-2 bg-primary text-white'>PRODUCTOS TOTALES VENDIDOS: {this.state.totAmountExpenses}</span>
+                    <span className='md:ml-8 btn btn-outline-dark btn-lg btn-block'><i className="bi bi-bag-check"/>    PRODUCTOS: {this.state.productTotal}</span>
+                    <span className='md:ml-8 btn btn-outline-dark btn-lg btn-block'><i className="bi bi-bag-check"/>    TOTALES: {this.state.totAmountTotal}</span>
+                    <span className='md:ml-8 btn btn-outline-dark btn-lg btn-block'><i className="bi bi-cart-check"/>    VENDIDOS: {this.state.totAmountExpenses}</span>
                 </div>
                 <div className='row'>
                     <div className='col-md-6 p-2'>

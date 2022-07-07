@@ -18,8 +18,6 @@ class InventoryApp extends Component {
     let errors = {}
     let validityStatus = true
 
-    console.log(form)
-
     if(form){
       if (form["providerName"] === '' || form["providerName"] === undefined ){
         validityStatus = false
@@ -80,6 +78,7 @@ class InventoryApp extends Component {
 
   modalInsertar=()=>{
     this.setState({modalInsertar: !this.state.modalInsertar});
+    this.setState({errorMessages: {}});
   }
 
   handleChange=async e=>{
@@ -88,8 +87,7 @@ class InventoryApp extends Component {
         ...this.state.form,
         [e.target.name]: e.target.value,
         stockInitial: 0
-      }
-    });
+      }});
   }
 
   componentDidMount() {
