@@ -117,9 +117,9 @@ class ExpensesApp extends Component {
     await this.setState({
       form:{
         ...this.state.form,
-        [e.target.name]: e.target.value,
-        stockInitial: 0
+        [e.target.name]: e.target.value
       }});
+      this.setState({errorMessages: {}});
   }
 
   componentDidMount() {

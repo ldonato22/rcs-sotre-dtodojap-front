@@ -29,6 +29,10 @@ class IncomeApp extends Component {
         validityStatus = false
         errors["invoice"] = "Se debe ingrasar una factura."
       }
+      if (form["amountDeposit"] === '' || form["amountDeposit"] === undefined ){
+        validityStatus = false
+        errors["amountDeposit"] = "Se debe ingresar una cantidad."
+      }
       if (form["amount"] === '' || form["amount"] === undefined ){
         validityStatus = false
         errors["amount"] = "Se debe ingresar una cantidad."
@@ -44,7 +48,7 @@ class IncomeApp extends Component {
 
     this.setState({errorMessages: errors})
     return validityStatus
-  }  
+  }
 
   peticionGetInventory=()=>{
     axios.get(url + "/inventory/all").then(response=>{
@@ -104,9 +108,9 @@ class IncomeApp extends Component {
       await this.setState({
         form:{
           ...this.state.form,
-          [e.target.name]: e.target.value,
-          stockInitial: 0
+          [e.target.name]: e.target.value
         }});
+        this.setState({errorMessages: {}});
   }
 
   componentDidMount() {
@@ -130,7 +134,7 @@ class IncomeApp extends Component {
 
   return (
     <>
-    <div className='py-4 mb-2 bg light d-flex justify-content-center'>
+      <div className='py-4 mb-2 bg light d-flex justify-content-center'>
         <button className="btn btn-primary btn-lg btn-block" onClick={()=>{this.setState({form: null, tipoModal: 'insertar'}); this.modalInsertar()}}>AGREGAR ENTRADA</button>
       </div>
       <div className='py-4 mb-2 bg light'>
@@ -142,7 +146,8 @@ class IncomeApp extends Component {
             <th>Fecha</th>
             <th>[Proveedor] - Nombre Producto</th>
             <th>Factura</th>
-            <th>Cantidad</th>
+            <th>Cant. en deposito</th>
+            <th>Cant. en local</th>
             <th>Precio Unitario Gs.</th>
           </tr>
         </thead>
@@ -153,6 +158,7 @@ class IncomeApp extends Component {
               <td>{product.date}</td>
               <td>{this.getPrductDesc(product.productId)}</td>
               <td>{product.invoice}</td>
+              <td>{product.amountDeposit}</td>
               <td>{product.amount}</td>
               <td>{formatUnitPrice.format(product.unitPrice)}</td>
             </tr>
@@ -180,7 +186,11 @@ class IncomeApp extends Component {
             <input className="form-control" type="text" name="invoice" id="invoice" placeholder='Factura' onChange={this.handleChange} value={form?form.invoice: ''}/>
             <p style={{color: "red"}}>{errorMessages?errorMessages.invoice: ''}</p>
             <br />
-            <label htmlFor="amount">Cantidad</label>
+            <label htmlFor="amountDeposit">Cantidad en deposito</label>
+            <input className="form-control" type="text" name="amountDeposit" id="amountDeposit" placeholder='0' onChange={this.handleChange} value={form?form.amountDeposit: ''}/>
+            <p style={{color: "red"}}>{errorMessages?errorMessages.amountDeposit: ''}</p>
+            <br />
+            <label htmlFor="amount">Cantidad en local</label>
             <input className="form-control" type="text" name="amount" id="amount" placeholder='0' onChange={this.handleChange} value={form?form.amount: ''}/>
             <p style={{color: "red"}}>{errorMessages?errorMessages.amount: ''}</p>
             <br />
@@ -191,15 +201,8 @@ class IncomeApp extends Component {
         </ModalBody>
 
         <ModalFooter>
-          {
-            this.state.tipoModal==='insertar'?
-              <button className="btn btn-success" onClick={()=>this.peticionPost()}>
-              Insertar
-              </button>: <button className="btn btn-primary" onClick={()=>this.peticionPut()}>
-              Actualizar
-              </button>
-          }
-            <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
+          <button className="btn btn-success" onClick={()=>this.peticionPost()}>Insertar</button>
+          <button className="btn btn-danger" onClick={()=>this.modalInsertar()}>Cancelar</button>
         </ModalFooter>
       </Modal>
     </>
